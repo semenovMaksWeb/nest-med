@@ -12,5 +12,5 @@ export class CreateUserDto {
 
     @IsNotEmpty()
     @ApiProperty()
-    tlf: number
+    tlf: string
 }

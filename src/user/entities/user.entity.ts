@@ -1,7 +1,7 @@
 import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity("user")
-export class UserEntity{
+export class UserEntity {
     @PrimaryGeneratedColumn()
     id: number;
 
@@ -12,5 +12,8 @@ export class UserEntity{
     fio: string;
 
     @Column()
-    tlf: number;
+    tlf: string;
+
+    @Column({ default: false })
+    doctor: boolean;
 }

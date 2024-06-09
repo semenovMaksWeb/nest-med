@@ -9,20 +9,25 @@ export class UserService {
 
   constructor(
     @InjectRepository(UserEntity)
-    private doctorRepository: Repository<UserEntity>,
+    private userRepository: Repository<UserEntity>,
   ) {
 
   }
 
   create(createUserDto: CreateUserDto) {
-    return this.doctorRepository.save(createUserDto);
+    return this.userRepository.save(createUserDto);
   }
 
-  findAll() {
-    return `This action returns all user`;
+  async checkPolis(polis: string) {
+    const polisFind = await this.findPolis(polis);
+    return !!polisFind;
+  }
+
+  async findPolis(polis: string) {
+    return await this.userRepository.findOne({ where: { polis: polis } });
   }
 
   findOne(id: number) {
-    return `This action returns a #${id} user`;
+    return this.userRepository.findOne({ where: { id: id } });
   }
 }
