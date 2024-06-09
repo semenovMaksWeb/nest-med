@@ -1,0 +1,7 @@
+npm i -g @nestjs/cli
+nest new .
+npm i
+npm install --save typeorm mysql2
+
+ссылка на генерация кода https://docs-nestjs.netlify.app/cli/usages
+npm install --save @nestjs/swagger
