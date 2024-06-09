@@ -18,6 +18,14 @@ export class UserService {
     return this.userRepository.save(createUserDto);
   }
 
+  async checkPolisAndDoctor(polis: string) {
+    const polisFind = await this.findPolis(polis);
+    if (polisFind.doctor) {
+      return await this.userRepository.find();
+    }
+    return [];
+  }
+
   async checkPolis(polis: string) {
     const polisFind = await this.findPolis(polis);
     return !!polisFind;

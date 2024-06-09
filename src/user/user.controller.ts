@@ -6,7 +6,7 @@ import { ApiTags } from '@nestjs/swagger';
 @ApiTags('user')
 @Controller('user')
 export class UserController {
-  constructor(private readonly userService: UserService) {}
+  constructor(private readonly userService: UserService) { }
 
   @Post()
   create(@Body() createUserDto: CreateUserDto) {
@@ -17,8 +17,14 @@ export class UserController {
   findOne(@Param('id') id: string) {
     return this.userService.findOne(+id);
   }
+
+  @Get('doctor/:polis')
+  async checkDoctor(@Param('polis') polis: string) {
+    return await this.userService.checkPolisAndDoctor(polis);
+  }
+
   @Get('/check/polis/:polis')
-  checkPolis(@Param('polis') polis: string) {    
+  checkPolis(@Param('polis') polis: string) {
     return this.userService.checkPolis(polis);
   }
 }

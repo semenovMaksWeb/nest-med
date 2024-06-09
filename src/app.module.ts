@@ -4,9 +4,10 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { bdMain } from './database/bdMain';
 import { ReceptionModule } from './reception/reception.module';
 import { UserModule } from './user/user.module';
+import { HistoryModule } from './history/history.module';
 
 @Module({
-  imports: [TypeOrmModule.forRoot(bdMain), DoctorModule, ReceptionModule, UserModule],
+  imports: [TypeOrmModule.forRoot(bdMain), DoctorModule, ReceptionModule, UserModule, HistoryModule],
   controllers: [],
   providers: [],
 })
