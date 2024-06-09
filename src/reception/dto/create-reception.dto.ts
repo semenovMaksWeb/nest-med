@@ -4,6 +4,10 @@ import { IsNotEmpty } from 'class-validator';
 export class CreateReceptionDto {
     @IsNotEmpty()
     @ApiProperty()
+    polis: string
+
+    @IsNotEmpty()
+    @ApiProperty()
     idDoctor: number
 
     @IsNotEmpty()

@@ -3,12 +3,14 @@ import { CreateReceptionDto } from './dto/create-reception.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { ReceptionEntity } from './entities/reception.entity';
 import { Repository } from 'typeorm';
+import { UserService } from 'src/user/user.service';
 
 @Injectable()
 export class ReceptionService {
   constructor(
     @InjectRepository(ReceptionEntity)
     private receptionRepository: Repository<ReceptionEntity>,
+    private userSerivce: UserService
   ) {
 
   }
@@ -16,26 +18,25 @@ export class ReceptionService {
     const check = await this.findCheckReception(createReceptionDto.idDoctor, createReceptionDto.date, createReceptionDto.time);
     console.log(check.length);
 
+    const user = await this.userSerivce.findPolis(createReceptionDto.polis);
+    if (!user) {
+      throw new HttpException('Пользователь не найден', HttpStatus.FORBIDDEN);
+    }
     if (check.length !== 0) {
       throw new HttpException('Текущий врач занят на эту дату и время', HttpStatus.FORBIDDEN);
     }
 
-    const elem = { ...createReceptionDto, idDoctor: undefined, doctor: { id: createReceptionDto.idDoctor }, }
+    const elem = { ...createReceptionDto, idDoctor: undefined, doctor: { id: createReceptionDto.idDoctor }, user: { id: user.id } }
     return this.receptionRepository.save(elem);
   }
 
   async findDate(date: Date, doctorId: number) {
-    const data = await this.receptionRepository.find({
-      select: { id: true, doctor: { id: true }, time: true, user: { id: true } },
-      where: { date: date, doctor: { id: doctorId } },
-      relations: ["doctor", "user"]
-    });
     const dateDefaultList = [
-      { id: 1, time: "8:00:00", status: 0 },
-      { id: 2, time: "8:30:00", status: 0 },
+      { id: 1, time: "08:00:00", status: 0 },
+      { id: 2, time: "08:30:00", status: 0 },
 
-      { id: 3, time: "9:00:00", status: 0 },
-      { id: 4, time: "9:30:00", status: 0 },
+      { id: 3, time: "09:00:00", status: 0 },
+      { id: 4, time: "09:30:00", status: 0 },
 
       { id: 5, time: "10:00:00", status: 0 },
       { id: 6, time: "10:30:00", status: 0 },
@@ -59,8 +60,23 @@ export class ReceptionService {
       { id: 18, time: "16:30:00", status: 0 },
       { id: 19, time: "17:00:00", status: 0 },
     ]
-    return [...data, ...dateDefaultList];
+    const data = await this.receptionRepository.find({
+      select: { id: true, time: true, user: { id: true }, doctor: { id: false, description: false, image: false, reception: false, name: false } },
+      where: { date: date, doctor: { id: doctorId } },
+      relations: ["doctor", "user"]
+    });
+    data.map((e: any) => {
+      e.status = 1;
+      const index = dateDefaultList.findIndex((dllElem: any) => {
+        return dllElem.time == e.time;
+      });
+      dateDefaultList[index] = e;
+
+    });
+
+    return dateDefaultList;
   }
+
   async findCheckReception(doctorId: number, date: Date, time: Date) {
     return this.receptionRepository.find({
       where: {
@@ -70,7 +86,12 @@ export class ReceptionService {
       }
     })
   }
-  findOne(id: number) {
-    return `This action returns a #${id} reception`;
+  async findPolis(polis: string) {
+    const data = await this.receptionRepository.find({
+      select: { id: true, time: true, user: { id: true }, doctor: { id: true, description: false, image: false, reception: false, name: true }, date: true },
+      where: { user: { polis: polis } },
+      relations: ["doctor", "user"]
+    });
+    return data;
   }
 }

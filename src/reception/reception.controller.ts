@@ -18,8 +18,8 @@ export class ReceptionController {
     return await this.receptionService.findDate(date, +doctorId);
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.receptionService.findOne(+id);
+  @Get('/polis/:polis')
+  findPolis(@Param('polis') polis: string) {
+    return this.receptionService.findPolis(polis);
   }
 }
