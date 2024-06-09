@@ -16,5 +16,5 @@ export class DoctorEntity {
     image: string;
 
     @OneToMany(() => ReceptionEntity, (reception) => reception.id)
-    photos: ReceptionEntity[]
+    reception: ReceptionEntity[]
 }

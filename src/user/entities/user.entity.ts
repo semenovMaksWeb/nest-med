@@ -1,4 +1,5 @@
-import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { ReceptionEntity } from "src/reception/entities/reception.entity";
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity("user")
 export class UserEntity {
@@ -16,4 +17,7 @@ export class UserEntity {
 
     @Column({ default: false })
     doctor: boolean;
+
+    @OneToMany(() => ReceptionEntity, (reception) => reception.id)
+    reception: ReceptionEntity[]
 }
