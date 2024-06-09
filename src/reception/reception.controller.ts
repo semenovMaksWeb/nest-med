@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Search, Query } from '@nestjs/common';
 import { ReceptionService } from './reception.service';
 import { CreateReceptionDto } from './dto/create-reception.dto';
 import { ApiTags } from '@nestjs/swagger';
@@ -14,8 +14,8 @@ export class ReceptionController {
   }
 
   @Get()
-  async findDate(@Param('date') date: Date) {
-    return await this.receptionService.findDate(date);
+  async findDate(@Query('date') date: Date, @Query('doctorId') doctorId: string) {
+    return await this.receptionService.findDate(date, +doctorId);
   }
 
   @Get(':id')
