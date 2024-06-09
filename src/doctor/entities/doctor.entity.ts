@@ -1,4 +1,5 @@
-import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
+import { ReceptionEntity } from 'src/reception/entities/reception.entity';
+import { Entity, Column, PrimaryGeneratedColumn, OneToMany } from 'typeorm';
 
 @Entity("doctor")
 export class DoctorEntity {
@@ -13,4 +14,7 @@ export class DoctorEntity {
 
     @Column()
     image: string;
+
+    @OneToMany(() => ReceptionEntity, (reception) => reception.id)
+    photos: ReceptionEntity[]
 }
