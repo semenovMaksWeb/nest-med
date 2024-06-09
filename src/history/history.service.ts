@@ -31,7 +31,7 @@ export class HistoryService {
   async findOne(polis: string) {
     const user = await this.userSerive.findPolis(polis);
     if (user.id) {
-      return await this.historyRepository.find({ where: { user: { id: user.id } } });
+      return await this.historyRepository.find({ where: { user: { id: user.id } }, relations: ["doctor"] });
     }
     return [];
   }
